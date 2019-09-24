@@ -628,9 +628,14 @@ def _get_run_env_vars(run_id, experiment_id):
     Returns a dictionary of environment variable key-value pairs to set in subprocess launched
     to run MLflow projects.
     """
+    if 'K8S_MLFLOW_TRACKING_URI' in os.environ:
+        tracking_uri = os.environ['K8S_MLFLOW_TRACKING_URI']
+    else:
+        tracking_uri = tracking.get_tracking_uri()
+
     return {
         tracking._RUN_ID_ENV_VAR: run_id,
-        tracking._TRACKING_URI_ENV_VAR: tracking.get_tracking_uri(),
+        tracking._TRACKING_URI_ENV_VAR: tracking_uri,
         tracking._EXPERIMENT_ID_ENV_VAR: str(experiment_id),
     }
 
